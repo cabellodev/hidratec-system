@@ -14,4 +14,98 @@ class Brand extends CI_Controller
             redirect(base_url() . 'login', 'refresh');
         }
     }
+    public function getBrand()
+    {
+        if ($this->accesscontrol->checkAuth()['correct']) {
+            $this->load->model('BrandModel');
+            $datos = $this->BrandModel->getBrand();
+            $this->response->sendJSONResponse($datos);
+        } else {
+            $this->response->sendJSONResponse(array('msg' => 'Permisos insuficientes'), 400);
+        }
+    }
+
+    public function createBrand()
+    {
+        if ($this->accesscontrol->checkAuth()['correct']) {
+            $data = $this->input->post('data');
+            $name = $data['name'];
+            
+            $ok = true;
+            $err = array();
+
+            if ($name == "") {
+                $ok = false;
+                $err['name']  = "Ingrese un nombre.";
+            }
+          
+           
+            if ($ok) {
+                $this->load->model('BrandModel');
+                $this->BrandModel->insertBrand($name);
+                $this->response->sendJSONResponse(array('msg' => "Marca creada."));
+            } else {
+                $this->response->sendJSONResponse(array('msg' => "Corrija los errores del formulario", 'err' => $err), 400);
+            }
+        } else {
+            $this->response->sendJSONResponse(array('msg' => 'Permisos insuficientes'), 400);
+        }
+    }
+
+    
+    public function editBrand()
+	{
+		if ($this->accesscontrol->checkAuth()['correct']) {
+			$data = $this->input->post('data');
+			$name = $data['name'];
+			$id= $data['id'];
+	
+			$ok = true;
+			$err = array();
+
+			if ($name == "") {
+				$ok = false;
+				$err['name']  = "Ingrese un nombre para el usuario.";
+			}
+		
+		
+			if ($ok) {
+				$this->load->model('BrandModel');
+				$res = $this->BrandModel->updateBrand($name,$id);
+				if ($res) {
+					$this->response->sendJSONResponse(array('msg' => "Marca modificada."));
+				} else {
+					$this->response->sendJSONResponse(array('msg' => "No se pudo modificar la marca."), 400);
+				}
+			} else {
+				$this->response->sendJSONResponse(array('msg' => "Corrija los errores del formulario", 'err' => $err), 400);
+			}
+		} else {
+			$this->response->sendJSONResponse(array('msg' => 'Permisos insuficientes'), 400);
+		}
+    }
+
+
+    public function changeState()
+	{
+		if ($this->accesscontrol->checkAuth()['correct']) {
+			$this->load->model('BrandModel');
+			$data = $this->input->post('data');
+			$state = $data['state'];
+			$id = $data['id'];
+			$res = $this->BrandModel->changeState($id, $state);
+			if ($res) {
+				$this->response->sendJSONResponse(array('msg' => "Estado cambiado exitosamente."));
+			} else {
+				$this->response->sendJSONResponse(array('msg' => "No se pudo cambiar el estado."), 400);
+			}
+		} else {
+			$this->response->sendJSONResponse(array('msg' => 'Permisos insuficientes'), 400);
+		}
+	}
+
+
+
+
+    
 }

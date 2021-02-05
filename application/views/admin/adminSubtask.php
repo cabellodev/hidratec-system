@@ -35,6 +35,7 @@
               <tr>
                 <th>Nombre</th>
                 <th>Descripción</th>
+                <th>Estado</th>
                 <th>Editar</th>
                 <th>Bloquear/Desbloquear</th>
               </tr>
@@ -50,3 +51,50 @@
 
   </div>
 </div>
+
+
+
+<div class="modal fade bd-example-modal-lg" id="addSubtask" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog  modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="title">Crear Componente</h5>
+        <button type="button" class="close"  data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm">
+            <p id="UserModalInfo"></p>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row mb-2">
+              <input type="hidden" class="form-control" id="id" name="id" >
+            <div class="col-md-12 col-lg-6 control-label">
+              <label for="actividad">Nombre</label>
+              <input type="text" class="form-control" id="name" name="name">
+              <div class="invalid-feedback name" style="display: none;  color:red">
+                Ingrese un nombre porfavor.
+            </div>
+            </div>
+            <div class="col-md-12 col-lg-6 control-label">
+              <label for="actividad">Descripcion</label>
+              <textarea type="text" class="form-control" name="description" id="description"></textarea>
+              <div class="invalid-feedback description" style="display: none;  color:red">
+                Ingrese su descripcion  porfavor.
+              </div>
+            </div>
+          </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" id="createSubtask" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="<?php echo base_url(); ?>assets/js_admin/adminSubtask.js"></script>

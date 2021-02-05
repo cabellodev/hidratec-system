@@ -69,12 +69,23 @@ $route['adminLocation']['GET']='Location/adminLocation';
 //(Location)
 $route['api/createLocation']['POST']='Location/createLocation';
 $route['api/editLocation']['POST']='Location/editLocation';
-$route['api/location/changeState']['POST']='Location/changeState';
+$route['api/changeStateLocation']['POST']='Location/changeState';
+$route['api/getLocation']['GET']='Location/getLocation';
 //(Substask)
 $route['api/createSubtask']['POST']='Subtask/createSubtask';
 $route['api/editSubtask']['POST']='Subtask/editSubtask';
-$route['api/subtask/changeState']['POST']='Subtask/changeState';
-
+$route['api/changeStateSubtask']['POST']='Subtask/changeState';
+$route['api/getSubtask']['GET']='Subtask/getSubtask';
+//(Component)
+$route['api/createComponent']['POST']='Component/createComponent';
+$route['api/editComponent']['POST']='Component/editComponent';
+$route['api/changeStateComponent']['POST']='Component/changeState';
+$route['api/getComponent']['GET']='Component/getComponent';
+//(Brand)
+$route['api/createBrand']['POST']='Brand/createBrand';
+$route['api/editBrand']['POST']='Brand/editBrand';
+$route['api/changeStateBrand']['POST']='Brand/changeState';
+$route['api/getBrand']['GET']='Brand/getBrand';
 
 
 // api admin users
