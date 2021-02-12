@@ -32,8 +32,6 @@ class Component extends CI_Controller
         if ($this->accesscontrol->checkAuth()['correct']) {
             $data = $this->input->post('data');
             $name = $data['name'];
-            $description = $data['description'];
-
             $ok = true;
             $err = array();
 
@@ -41,18 +39,19 @@ class Component extends CI_Controller
                 $ok = false;
                 $err['name']  = "Ingrese un nombre.";
             }
-            if ($description == "") {
-                $ok = false;
-                $err['descripcion'] = "Ingrese una descripcion.";
-            }
            
             if ($ok) {
               
                 $this->load->model('ComponentModel');
-                $this->ComponentModel->insertComponent($name,$description);
-                $this->response->sendJSONResponse(array('msg' => "Componente creado."));
+               $res=$this->ComponentModel->insertComponent($name);
+                if($res){
+                    $this->response->sendJSONResponse(array('msg' => "Componente creado.")); 
+                }else{
+                    $this->response->sendJSONResponse(array('msg' => "El nombre ya existe. Reintente con otro." ,'err'=>"Ingrese un nombre"), 400);
+                }
+               
             } else {
-                $this->response->sendJSONResponse(array('msg' => "Corrija los errores del formulario", 'err' => $err), 400);
+                $this->response->sendJSONResponse(array('msg' => "Ingrese un nombre" ,'err'=>'Ingrese un nombre'), 400);
             }
         } else {
             $this->response->sendJSONResponse(array('msg' => 'Permisos insuficientes'), 400);
@@ -67,7 +66,6 @@ class Component extends CI_Controller
 		if ($this->accesscontrol->checkAuth()['correct']) {
 			$data = $this->input->post('data');
 			$name = $data['name'];
-			$description = $data['description'];
 			$id= $data['id'];
 	
 			$ok = true;
@@ -75,23 +73,19 @@ class Component extends CI_Controller
 
 			if ($name == "") {
 				$ok = false;
-				$err['name']  = "Ingrese un nombre para el usuario.";
+				$err['name']  = "Ingrese un nombre para el componente.";
 			}
-			if ($description == "") {
-				$ok = false;
-				$err['description'] = "Ingrese un correo electrónico.";
-			}
-		
+			
 			if ($ok) {
 				$this->load->model('ComponentModel');
-				$res = $this->ComponentModel->updateComponent($name, $description,$id);
+				$res = $this->ComponentModel->updateComponent($name, $id);
 				if ($res) {
 					$this->response->sendJSONResponse(array('msg' => "Componente modificado."));
 				} else {
-					$this->response->sendJSONResponse(array('msg' => "No se pudo modificar el usuario."), 400);
+                    $this->response->sendJSONResponse(array('msg' => "El nombre ya existe. Reintente con otro." ,'err'=>"Ingrese un nombre"), 400);
 				}
 			} else {
-				$this->response->sendJSONResponse(array('msg' => "Corrija los errores del formulario", 'err' => $err), 400);
+                $this->response->sendJSONResponse(array('msg' => "Ingrese un nombre" ,'err'=>'Ingrese un nombre'), 400);
 			}
 		} else {
 			$this->response->sendJSONResponse(array('msg' => 'Permisos insuficientes'), 400);

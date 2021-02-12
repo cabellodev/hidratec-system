@@ -13,6 +13,7 @@ $(document).on({
 
 var edit = false;
 var idEdit = 0;
+let currentName= "_[[][ÑLLKLHHGHJKUUHYT%&%%$%//&%%$%%$$#";
 
 const tabla = $("#table-subtask").DataTable({
 	// searching: true,
@@ -21,8 +22,7 @@ const tabla = $("#table-subtask").DataTable({
 	},
 	columns: [
 		{ data: "name" },
-		{ data: "description" },
-		{ data: "states" },
+		{ data: "state" },
 		{
 			defaultContent: `<button type='button' name='editButton' class='btn btn-primary'>
                                   Editar
@@ -52,10 +52,10 @@ getSubtask = () => {
 	xhr.addEventListener("load", () => {
 		if (xhr.status === 200) {
 			let data = xhr.response.map((u) => {
-				if (u.states == 1) {
-					u.states = "En utilización";
+				if (u.state == 1) {
+					u.state = "En utilización";
 				} else {
-					u.states = "Suspendido";
+					u.state = "Suspendido";
 				}
 				return u;
 			});
@@ -93,19 +93,19 @@ $("#table-subtask").on("click", "button", function () {
 			},
 		}).then((action) => {
 			if (action == "exec") {
-				bloquearDesbloquearSubtask(data.id_subtask, data.states);
+				bloquearDesbloquearSubtask(data.id, data.state);
 			} else {
 				swal.close();
 			}
 		});
 	} else {
 		edit = true;
-		idEdit = data.id_subtask;
+		idEdit = data.id;
+		currentName = data.name;
 		cleanInput();
         $("#title").text("Modificar componente");
         $("#name").val(data.name);
-		$("#id").val(data.id_subtask);
-		$("#description").val(data.description);
+		$("#id").val(data.id);
 		$("#addSubtask").modal("show");
 	}
 });
@@ -146,10 +146,11 @@ bloquearDesbloquearSubtask = (id, state) => {
 registerSubtask = () => {
 	let data = {
 		name: $("#name").val(),
-        description: $("#description").val(),
         id: $("#id").val(),
     };
- 
+
+	console.log(data);
+	if(currentName != data.name ){
     console.log(data);
 	let url = "";
 	if (edit) url = "api/editSubtask";
@@ -177,24 +178,35 @@ registerSubtask = () => {
 			});
 		},
 		error: (result) => {
-			swal({
+              console.log(result);
+				swal({
 				title: "Error",
 				icon: "error",
 				text: result.responseJSON.msg,
+			}).then(() => {
+				if(result.responseJSON.err){$("#frm_name > div").html(result.responseJSON.err); $("#frm_name > input").addClass("is-invalid");}
 			});
-			addErrorStyle(result.responseJSON.err);
+
+		     
 		},
 	});
+}else{
+	swal({
+		title: "Error",
+		icon: "error",
+		text: "Ingrese un nombre diferente al actual ",
+	});
+
+}
 };
 
 cleanInput = () => {
     $("#title").text("Crear subtarea");
     $("#id").val("");
 	$("#name").val("");
-	$("#description").val("");
 	$(`.name`).hide();
-    $(`.description`).hide();
     $(`.id`).hide();
+	$("#frm_name > input").removeClass("is-invalid");
 
 };
 

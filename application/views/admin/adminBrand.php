@@ -67,22 +67,19 @@
           </div>
         </div>
         <div class="form-group">
-          <div class="row mb-2">
-              <input type="hidden" class="form-control" id="id" name="id" >
-            <div class="col-md-12 col-lg-6 control-label">
-              <label for="actividad">Nombre</label>
-              <input type="text" class="form-control" id="name" name="name">
-              <div class="invalid-feedback name" style="display: none;  color:red">
-                Ingrese un nombre por favor.
-              </div>
+        <form>
+            <input type="hidden" class="form-control" id="id" name="id" >
+            <div class="form-group" id="frm_name">
+                <label>Nombre</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Ingrese nombre">
+                 <div class="invalid-feedback"></div>
             </div>
+            <div class="form-group float-right">
+            <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="button" id="createBrand" class="btn btn-primary">Guardar</button>
           </div>
-          </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" id="createBrand" class="btn btn-primary">Guardar</button>
-      </div>
+
+      </form>
     </div>
   </div>
 </div>

@@ -56,6 +56,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['login']['GET']= 'Login/index';
 $route['menu']['GET']='Menu/loadMenu';
 $route['adminUser']['GET']='User/adminUser';
+$route['newOrder']['GET']='Orders/newOrder';
 //views admin OT 
 $route['stagesOrder']['GET']='Orders/stagesOrder';
 $route['adminOrders']['GET']='Orders/adminOrders';

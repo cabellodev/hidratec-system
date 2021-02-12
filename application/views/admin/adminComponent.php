@@ -34,7 +34,6 @@
             <thead>
               <tr>
                 <th>Nombre</th>
-                <th>Descripción</th>
                 <th>Estado</th>
                 <th>Editar</th>
                 <th>Bloquear/Desbloquear</th>
@@ -68,30 +67,22 @@
             <p id="UserModalInfo"></p>
           </div>
         </div>
+      
         <div class="form-group">
-          <div class="row mb-2">
-              <input type="hidden" class="form-control" id="id" name="id" >
-            <div class="col-md-12 col-lg-6 control-label">
-              <label for="actividad">Nombre</label>
-              <input type="text" class="form-control" id="name" name="name">
-              <div class="invalid-feedback name" style="display: none;  color:red">
-                Ingrese un nombre por favor.
-              </div>
+        
+        <form>
+            <input type="hidden" class="form-control" id="id" name="id" >
+            <div class="form-group" id="frm_name">
+                <label>Nombre</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Ingrese nombre">
+                 <div class="invalid-feedback"></div>
             </div>
-            <div class="col-md-12 col-lg-6 control-label">
-              <label for="actividad">Descripcion</label>
-              <textarea type="text" class="form-control" name="description" id="description"></textarea>
-              <div class="invalid-feedback description" style="display: none;  color:red">
-                Ingrese su descripcion  por favor.
-              </div>
-            </div>
-          </div>
-          </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        <button type="button" id="createComponent" class="btn btn-primary">Guardar</button>
-      </div>
+            <div class="form-group float-right">
+            <button type="button" id="close" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="button" id="createComponent" class="btn btn-primary">Guardar</button>
+                    </div>
+
+      </form>
     </div>
   </div>
 </div>

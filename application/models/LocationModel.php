@@ -14,23 +14,41 @@ class LocationModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function insertLocation($name,$description)
+    public function insertLocation($name)
     {
-        $query = "INSERT INTO locations (locations.name ,locations.description, states) VALUES (?, ?, ?)";
-      return $this->db->query($query, array($name, $description, true));
+
+        $query= "SELECT * FROM locations  WHERE locations.name = ?";
+        $result= $this->db->query($query, array($name));
+         
+        if($result->num_rows() > 0){
+            return false; 
+        }else{
+            
+            $query = "INSERT INTO locations (locations.name , locations.state) VALUES (?, ?)";
+            return $this->db->query($query, array($name, true));
+        }
+       
     }
 
    
-    public function updateLocation($name,$description,$id)
+    public function updateLocation($name,$id)
     {
-        $query = "UPDATE locations SET locations.name= ?,locations.description= ? WHERE id_location =?";
-        return $this->db->query($query, array($name, $description, $id));
+        $query= "SELECT * FROM locations WHERE locations.name = ?";
+        $result= $this->db->query($query, array($name));
+
+        if($result->num_rows() > 0){
+            return false; 
+        }else{
+
+            $query = "UPDATE locations SET locations.name= ? WHERE id =?";
+            return $this->db->query($query, array($name,  $id));   
+        }  
      }
     
 
     public function changeState($id, $state)
     {
-       $query = "UPDATE locations SET states = ? WHERE id_location = ?";
+       $query = "UPDATE locations SET locations.state = ? WHERE id = ?";
        return $this->db->query($query, array($state, $id));
     }
  

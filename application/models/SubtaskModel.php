@@ -14,23 +14,39 @@ class SubtaskModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function insertSubtask($name,$description)
+    public function insertSubtask($name)
     {
-        $query = "INSERT INTO subtask (subtask.name ,subtask.description, states) VALUES (?, ?, ?)";
-      return $this->db->query($query, array($name, $description, true));
+        $query= "SELECT * FROM subtask  WHERE subtask.name = ?";
+        $result= $this->db->query($query, array($name));
+         
+        if($result->num_rows() > 0){
+            return false; 
+        }else{
+            
+            $query = "INSERT INTO subtask (subtask.name, subtask.state) VALUES (?, ?)";
+             return $this->db->query($query, array($name, true));
+        }
     }
 
-   
-    public function updateSubtask($name,$description,$id)
-    {
-        $query = "UPDATE subtask SET subtask.name= ?,subtask.description= ? WHERE id_subtask =?";
-        return $this->db->query($query, array($name, $description, $id));
+    public function updateSubtask($name,$id)
+    {   
+        $query= "SELECT * FROM subtask WHERE subtask.name = ?";
+        $result= $this->db->query($query, array($name));
+
+        if($result->num_rows() > 0){
+            return false; 
+        }else{
+
+            $query = "UPDATE subtask SET subtask.name= ? WHERE id =?";
+            return $this->db->query($query, array($name, $id));
+        }  
+       
      }
     
 
     public function changeState($id, $state)
     {
-       $query = "UPDATE subtask SET states = ? WHERE id_subtask = ?";
+       $query = "UPDATE subtask SET subtask.state = ? WHERE id = ?";
        return $this->db->query($query, array($state, $id));
     }
  

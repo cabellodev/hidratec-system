@@ -31,28 +31,30 @@ class Location extends CI_Controller
     {
         if ($this->accesscontrol->checkAuth()['correct']) {
             $data = $this->input->post('data');
-            $name = $data['name'];
-            $description = $data['description'];
-
-            $ok = true;
-            $err = array();
-
+			$name = $data['name'];
+			$id= $data['id'];
+	
+			$ok = true;
+			$err = array();
             if ($name == "") {
                 $ok = false;
                 $err['name']  = "Ingrese un nombre.";
             }
-            if ($description == "") {
-                $ok = false;
-                $err['descripcion'] = "Ingrese una descripcion.";
-            }
-           
+            
             if ($ok) {
               
                 $this->load->model('LocationModel');
-                $this->LocationModel->insertLocation($name,$description);
-                $this->response->sendJSONResponse(array('msg' => "Ubicación creada."));
+                $res=$this->LocationModel->insertLocation($name);
+                if($res){ 
+                    $this->response->sendJSONResponse(array('msg' => "Ubicación creada."));
+                }else{
+                    $this->response->sendJSONResponse(array('msg' => "Nombre repetido. Reintente",'err'=>"Ingrese un nombre"), 400);
+                }
+               
             } else {
-                $this->response->sendJSONResponse(array('msg' => "Corrija los errores del formulario", 'err' => $err), 400);
+              
+                $this->response->sendJSONResponse(array('msg' => "Ingrese un nombre" ,'err'=>'Ingrese un nombre'), 400);
+                //$this->response->sendJSONResponse(array('msg' => "Corrija los errores del formulario", 'err' => $err), 400);
             }
         } else {
             $this->response->sendJSONResponse(array('msg' => 'Permisos insuficientes'), 400);
@@ -65,31 +67,27 @@ class Location extends CI_Controller
 		if ($this->accesscontrol->checkAuth()['correct']) {
 			$data = $this->input->post('data');
 			$name = $data['name'];
-			$description = $data['description'];
 			$id= $data['id'];
 	
 			$ok = true;
 			$err = array();
-
-			if ($name == "") {
-				$ok = false;
-				$err['name']  = "Ingrese un nombre para el usuario.";
-			}
-			if ($description == "") {
-				$ok = false;
-				$err['description'] = "Ingrese un correo electrónico.";
-			}
-		
+            if ($name == "") {
+                $ok = false;
+                $err['name']  = "Ingrese un nombre.";
+            }
+            
+           
+			
 			if ($ok) {
 				$this->load->model('LocationModel');
-				$res = $this->LocationModel->updateLocation($name, $description,$id);
+				$res = $this->LocationModel->updateLocation($name,$id);
 				if ($res) {
 					$this->response->sendJSONResponse(array('msg' => "Ubicación modificada."));
 				} else {
-					$this->response->sendJSONResponse(array('msg' => "No se pudo modificar el usuario."), 400);
+					$this->response->sendJSONResponse(array('msg' => "Nombre repetido.Reintente" ,'err'=>"Ingrese un nombre"), 400);
 				}
 			} else {
-				$this->response->sendJSONResponse(array('msg' => "Corrija los errores del formulario", 'err' => $err), 400);
+				$this->response->sendJSONResponse(array('msg' => "Ingrese un nombre" ,'err'=>'Ingrese un nombre'), 400);
 			}
 		} else {
 			$this->response->sendJSONResponse(array('msg' => 'Permisos insuficientes'), 400);

@@ -13,6 +13,7 @@ $(document).on({
 
 var edit = false;
 var idEdit = 0;
+let currentName = "_[[][ÑLLKLHHGHJKUUHYT%&%%$%//&%%$%%$$#";
 
 const tabla = $("#table-brand").DataTable({
 	// searching: true,
@@ -21,7 +22,7 @@ const tabla = $("#table-brand").DataTable({
 	},
 	columns: [
         { data: "name" },
-		{ data: "states" },
+		{ data: "state" },
 		{
 			defaultContent: `<button type='button' name='editButton' class='btn btn-primary'>
                                   Editar
@@ -51,10 +52,10 @@ getBrand = () => {
 	xhr.addEventListener("load", () => {
 		if (xhr.status === 200) {
 			let data = xhr.response.map((u) => {
-				if (u.states == 1) {
-					u.states = "En utilización";
+				if (u.state == 1) {
+					u.state = "En utilización";
 				} else {
-					u.states = "Suspendido";
+					u.state = "Suspendido";
 				}
 				return u;
 			});
@@ -74,6 +75,7 @@ getBrand = () => {
 
 $("#table-brand").on("click", "button", function () {
 	let data = tabla.row($(this).parents("tr")).data();
+	
 	if ($(this)[0].name == "deleteButton") {
 		swal({
 			title: `Bloquear/Desbloquear ubicación`,
@@ -92,18 +94,19 @@ $("#table-brand").on("click", "button", function () {
 			},
 		}).then((action) => {
 			if (action == "exec") {
-				bloquearDesbloquearBrand(data.id_brand, data.states);
+				bloquearDesbloquearBrand(data.id, data.state);
 			} else {
 				swal.close();
 			}
 		});
 	} else {
 		edit = true;
-		idEdit = data.id_brand;
+		idEdit = data.id;
+        currentName = data.name;
 		cleanInput();
         $("#title").text("Modificar marca");
         $("#name").val(data.name);
-		$("#id").val(data.id_brand);
+		$("#id").val(data.id);
 		$("#addBrand").modal("show");
 	}
 });
@@ -147,8 +150,7 @@ registerBrand = () => {
         id: $("#id").val(),
     };
 
- 
-
+	if (currentName != data.name) {
 	let url = "";
 	if (edit) url = "api/editBrand";
 	else url = "api/createBrand";
@@ -175,14 +177,29 @@ registerBrand = () => {
 			});
 		},
 		error: (result) => {
+
+
 			swal({
 				title: "Error",
 				icon: "error",
 				text: result.responseJSON.msg,
+			}).then(() => {
+				if(result.responseJSON.err){$("#frm_name > div").html(result.responseJSON.err); $("#frm_name > input").addClass("is-invalid");}
 			});
-			addErrorStyle(result.responseJSON.err);
-		},
+          },
 	});
+
+}else{
+	swal({
+		title: "Error",
+		icon: "error",
+		text: "Ingrese un nombre diferente al actual.",
+	});
+
+}
+
+
+
 };
 
 cleanInput = () => {
@@ -191,6 +208,7 @@ cleanInput = () => {
 	$("#name").val("");
 	$(`.name`).hide();
     $(`.id`).hide();
+	$("#frm_name > input").removeClass("is-invalid");
 
 };
 

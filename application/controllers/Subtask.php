@@ -31,7 +31,7 @@ class Subtask extends CI_Controller
         if ($this->accesscontrol->checkAuth()['correct']) {
             $data = $this->input->post('data');
             $name = $data['name'];
-            $description = $data['description'];
+           
 
             $ok = true;
             $err = array();
@@ -40,18 +40,20 @@ class Subtask extends CI_Controller
                 $ok = false;
                 $err['name']  = "Ingrese un nombre.";
             }
-            if ($description == "") {
-                $ok = false;
-                $err['descripcion'] = "Ingrese una descripcion.";
-            }
+            
            
             if ($ok) {
               
                 $this->load->model('SubtaskModel');
-                $this->SubtaskModel->insertSubtask($name,$description);
-                $this->response->sendJSONResponse(array('msg' => "Subtarea creada."));
+                $res=$this->SubtaskModel->insertSubtask($name);
+                if($res){ 
+                    $this->response->sendJSONResponse(array('msg' => "Subtarea creada."));
+                }else{
+	                $this->response->sendJSONResponse(array('msg' => "El nombre ya existe. Reintente con otro." ,'err'=>"Ingrese un nombre"), 400);
+                }
+               
             } else {
-                $this->response->sendJSONResponse(array('msg' => "Corrija los errores del formulario", 'err' => $err), 400);
+                $this->response->sendJSONResponse(array('msg' => "Ingrese un nombre por favor." ,'err'=>'Ingrese un nombre'), 400);
             }
         } else {
             $this->response->sendJSONResponse(array('msg' => 'Permisos insuficientes'), 400);
@@ -66,7 +68,6 @@ class Subtask extends CI_Controller
 		if ($this->accesscontrol->checkAuth()['correct']) {
 			$data = $this->input->post('data');
 			$name = $data['name'];
-			$description = $data['description'];
 			$id= $data['id'];
 	
 			$ok = true;
@@ -76,21 +77,17 @@ class Subtask extends CI_Controller
 				$ok = false;
 				$err['name']  = "Ingrese un nombre .";
 			}
-			if ($description == "") {
-				$ok = false;
-				$err['description'] = "Ingrese descripción.";
-			}
 		
 			if ($ok) {
 				$this->load->model('SubtaskModel');
-				$res = $this->SubtaskModel->updateSubtask($name, $description,$id);
+				$res = $this->SubtaskModel->updateSubtask($name,$id);
 				if ($res) {
 					$this->response->sendJSONResponse(array('msg' => "Subtarea modificada."));
 				} else {
-					$this->response->sendJSONResponse(array('msg' => "No se pudo modificar la subtarea."), 400);
+                    $this->response->sendJSONResponse(array('msg' => "El nombre ya existe. Reintente con otro." ,'err'=>"Ingrese un nombre"), 400);
 				}
 			} else {
-				$this->response->sendJSONResponse(array('msg' => "Corrija los errores del formulario", 'err' => $err), 400);
+				$this->response->sendJSONResponse(array('msg' => "Ingrese un nombre por favor" ,'err'=>'Ingrese un nombre'), 400);
 			}
 		} else {
 			$this->response->sendJSONResponse(array('msg' => 'Permisos insuficientes'), 400);

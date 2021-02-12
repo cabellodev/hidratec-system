@@ -42,30 +42,33 @@ class Brand extends CI_Controller
            
             if ($ok) {
                 $this->load->model('BrandModel');
-                $this->BrandModel->insertBrand($name);
-                $this->response->sendJSONResponse(array('msg' => "Marca creada."));
+                $res=$this->BrandModel->insertBrand($name);
+                if($res){ 
+                    $this->response->sendJSONResponse(array('msg' => "Marca creada.")); 
+                }else{ 
+                    $this->response->sendJSONResponse(array('msg' => "El nombre ya existe. Reintente con otro." ,'err'=>"Ingrese un nombre"), 400);
+                }
             } else {
-                $this->response->sendJSONResponse(array('msg' => "Corrija los errores del formulario", 'err' => $err), 400);
+                $this->response->sendJSONResponse(array('msg' => "Ingrese un nombre" ,'err'=>'Ingrese un nombre'), 400);
             }
         } else {
             $this->response->sendJSONResponse(array('msg' => 'Permisos insuficientes'), 400);
         }
     }
+  
 
     
-    public function editBrand()
-	{
+    public function editBrand(){
 		if ($this->accesscontrol->checkAuth()['correct']) {
 			$data = $this->input->post('data');
 			$name = $data['name'];
 			$id= $data['id'];
-	
 			$ok = true;
 			$err = array();
 
 			if ($name == "") {
 				$ok = false;
-				$err['name']  = "Ingrese un nombre para el usuario.";
+				$err['name']  = "Ingrese un nombre de marca.";
 			}
 		
 		
@@ -75,10 +78,10 @@ class Brand extends CI_Controller
 				if ($res) {
 					$this->response->sendJSONResponse(array('msg' => "Marca modificada."));
 				} else {
-					$this->response->sendJSONResponse(array('msg' => "No se pudo modificar la marca."), 400);
+                    $this->response->sendJSONResponse(array('msg' => "El nombre ya existe. Reintente con otro." ,'err'=>"Ingrese un nombre"), 400);
 				}
 			} else {
-				$this->response->sendJSONResponse(array('msg' => "Corrija los errores del formulario", 'err' => $err), 400);
+                $this->response->sendJSONResponse(array('msg' => "Ingrese un nombre" ,'err'=>'Ingrese un nombre'), 400);
 			}
 		} else {
 			$this->response->sendJSONResponse(array('msg' => 'Permisos insuficientes'), 400);

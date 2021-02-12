@@ -13,6 +13,7 @@ $(document).on({
 
 var edit = false;
 var idEdit = 0;
+let currentName="_[[][ÑLLKLHHGHJKUUHYT%&%%$%//&%%$%%$$#";
 
 const tabla = $("#table-location").DataTable({
 	// searching: true,
@@ -21,8 +22,7 @@ const tabla = $("#table-location").DataTable({
 	},
 	columns: [
         { data: "name" },
-        { data: "description" },
-		{ data: "states" },
+		{ data: "state" },
 		{
 			defaultContent: `<button type='button' name='editButton' class='btn btn-primary'>
                                   Editar
@@ -52,10 +52,10 @@ getLocation = () => {
 	xhr.addEventListener("load", () => {
 		if (xhr.status === 200) {
 			let data = xhr.response.map((u) => {
-				if (u.states == 1) {
-					u.states = "En utilización";
+				if (u.state == 1) {
+					u.state = "En utilización";
 				} else {
-					u.states = "Suspendido";
+					u.state = "Suspendido";
 				}
 				return u;
 			});
@@ -93,19 +93,19 @@ $("#table-location").on("click", "button", function () {
 			},
 		}).then((action) => {
 			if (action == "exec") {
-				bloquearDesbloquearLocation(data.id_location, data.states);
+				bloquearDesbloquearLocation(data.id, data.state);
 			} else {
 				swal.close();
 			}
 		});
 	} else {
 		edit = true;
-		idEdit = data.id_location;
+		idEdit = data.id;
+		currentName = data.name;
 		cleanInput();
         $("#title").text("Modificar ubicación");
         $("#name").val(data.name);
-		$("#id").val(data.id_location);
-		$("#description").val(data.description);
+		$("#id").val(data.id);
 		$("#addLocation").modal("show");
 	}
 });
@@ -146,12 +146,11 @@ bloquearDesbloquearLocation = (id, state) => {
 registerLocation = () => {
 	let data = {
 		name: $("#name").val(),
-        description: $("#description").val(),
         id: $("#id").val(),
     };
-    console.log(data);
- 
 
+ 
+    if (currentName != data.name) {
 	let url = "";
 	if (edit) url = "api/editLocation";
 	else url = "api/createLocation";
@@ -178,23 +177,32 @@ registerLocation = () => {
 			});
 		},
 		error: (result) => {
+		    console.log(result.responseJSON.err);
 			swal({
 				title: "Error",
 				icon: "error",
 				text: result.responseJSON.msg,
-			});
-			addErrorStyle(result.responseJSON.err);
+			}).then(() => {
+                if(result.responseJSON.err){$("#frm_name > div").html(result.responseJSON.err); $("#frm_name > input").addClass("is-invalid");}
+                
+             });
 		},
 	});
+}else{
+	swal({
+		title: "Error",
+		icon: "error",
+		text: "Ingrese un nombre diferente al actual.",
+	});
+}
 };
 
 cleanInput = () => {
     $("#title").text("Crear ubicaciones");
     $("#id").val("");
 	$("#name").val("");
-	$("#description").val("");
 	$(`.name`).hide();
-    $(`.description`).hide();
+	$("#frm_name > input").removeClass("is-invalid");
     $(`.id`).hide();
 
 };

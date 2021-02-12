@@ -14,23 +14,41 @@ class ComponentModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function insertComponent($name,$description)
+    public function insertComponent($name)
     {
-        $query = "INSERT INTO component (component.name ,component.description, states) VALUES (?, ?, ?)";
-      return $this->db->query($query, array($name, $description, true));
+        $query= "SELECT * FROM component  WHERE component.name = ?";
+        $result= $this->db->query($query, array($name));
+         
+        if($result->num_rows() > 0){
+            return false; 
+        }else{
+            
+            $query = "INSERT INTO component (component.name , component.state) VALUES (?, ?)";
+            return $this->db->query($query, array($name, true));
+        }
+
     }
 
    
-    public function updateComponent($name,$description,$id)
-    {
-        $query = "UPDATE component SET component.name= ?,component.description= ? WHERE id_component =?";
-        return $this->db->query($query, array($name, $description, $id));
+    public function updateComponent($name,$id)
+    {   
+        $query= "SELECT * FROM component WHERE component.name = ?";
+        $result= $this->db->query($query, array($name));
+
+        if($result->num_rows() > 0){
+            return false; 
+        }else{
+
+            $query = "UPDATE component SET component.name= ?WHERE id=?";
+            return $this->db->query($query, array($name,  $id));  
+        }  
+       
      }
     
 
     public function changeState($id, $state)
     {
-       $query = "UPDATE component SET states = ? WHERE id_component = ?";
+       $query = "UPDATE component SET component.state = ? WHERE id = ?";
        return $this->db->query($query, array($state, $id));
     }
  

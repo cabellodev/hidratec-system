@@ -35,7 +35,7 @@ class PHPMailer_Lib
         $mail->Username = 'picamaderomuebles@gmail.com';
         $mail->Password = 'Zkb?Wx8.ihxi';
         $mail->SMTPSecure = 'tls';
-        $mail->Port     = 587;
+        $mail->Port  = 587;
         
         $mail->setFrom('picamaderomuebles@gmail.com', 'Picamadero');
         $mail->addReplyTo('picamaderomuebles@gmail.com', 'Picamadero');
